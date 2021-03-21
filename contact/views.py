@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 from .models import Contact
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def index(request):
@@ -11,7 +12,8 @@ def index(request):
         contacts = Contact.objects.all()
         search_input = ''
     return render(request, 'index.html', {'contacts':contacts})
-    
+
+@login_required(login_url='/accounts/login/')    
 def addContact(request):
     if request.method == 'POST':
         new_contact = Contact(
@@ -27,7 +29,7 @@ def addContact(request):
 
     return render(request,'new.html')
 
-
+@login_required(login_url='/accounts/login/')
 def editContact(request, pk):
     contact = Contact.objects.get(id=pk)
 
@@ -42,7 +44,7 @@ def editContact(request, pk):
         return redirect('/profile/'+str(contact.id))
     return render(request, 'edit.html', {'contact': contact})     
 
-
+@login_required(login_url='/accounts/login/')
 def deleteContact(request, pk):
     contact = Contact.objects.get(id=pk)
 
@@ -52,7 +54,7 @@ def deleteContact(request, pk):
 
     return render(request, 'delete.html', {'contact': contact})    
 
-
+@login_required(login_url='/accounts/login/')
 def contactProfile(request, pk):
     contact = Contact.objects.get(id=pk)
     return render(request, 'contact-profile.html', {'contact':contact})     
